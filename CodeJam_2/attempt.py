@@ -2,10 +2,10 @@ import cv2
 import numpy as np
 
 im1 = cv2.imread('1.jpg',0)
-ret1,thresh1 = cv.threshold(im1, 127, 255,0)
+ret,thresh1 = cv2.threshold(im1, 127, 255,0)
 
 im2 = cv2.imread('2.jpg',0)
-ret2,thresh2 = cv.threshold(im2, 127, 255,0)
+ret,thresh2 = cv2.threshold(im2, 127, 255,0)
 #contours of images of sample images of 1 and 2
 contours,hierarchy = cv2.findContours(thresh1, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
 c1 = contours[0]
@@ -17,8 +17,8 @@ while cap.isOpened():
     ret1,frame = cap.read()
     if ret1 == True:
         hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
-        l_b = np.array([0,0,156])
-        u_b = np.array([255,20,178])
+        l_b = np.array([0,0,150])
+        u_b = np.array([100,100,255])
         msk = cv2.inRange(hsv, l_b, u_b)
         mask = cv2.GaussianBlur(msk,(5,5),0)
         res = cv2.bitwise_and(frame,frame,mask=mask)
@@ -33,8 +33,8 @@ while cap.isOpened():
             for c in (cnt[0],cnt[1]):
                 (x,y,w,h) = cv2.boundingRect(c)
                 #cv2.rectangle(frame,(x,y),(x+w,y+h),(0,255,0),2)
-                r1 = cv.matchShapes(cnt,c1,1,0.0)
-                r2 = cv.matchShapes(cnt,c2,1,0.0)
+                r1 = cv.matchShapes(c,c1,1,0.0)
+                r2 = cv.matchShapes(c,c2,1,0.0)
                 if (r1>r2):     #contour is more similar to contour of image of 1
                     cv2.rectangle(frame,(x,y),(x+w,y+h),(0,255,0),2)
                 elif(r2>r1):
